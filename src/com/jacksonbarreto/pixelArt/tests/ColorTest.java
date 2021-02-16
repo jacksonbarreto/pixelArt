@@ -24,6 +24,14 @@ public class ColorTest {
     }
 
     @Test
+    void creationFromAnObjectThatShouldThrowAnException(){
+        Color nullColor = null;
+        Color.CommonColors enumNull = null;
+        assertThrows(IllegalArgumentException.class, () -> new Color(nullColor));
+        assertThrows(IllegalArgumentException.class, () -> new Color(enumNull));
+    }
+
+    @Test
     void hexadecimalCreationsThatShouldThrowAnException() {
         String str = null;
         assertThrows(IllegalArgumentException.class, () -> new Color("#ff000"));
