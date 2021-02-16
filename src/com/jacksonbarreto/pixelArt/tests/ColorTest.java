@@ -24,7 +24,7 @@ public class ColorTest {
     }
 
     @Test
-    void creationFromAnObjectThatShouldThrowAnException(){
+    void creationFromAnObjectThatShouldThrowAnException() {
         Color nullColor = null;
         Color.CommonColors enumNull = null;
         assertThrows(IllegalArgumentException.class, () -> new Color(nullColor));
