@@ -3,7 +3,17 @@ package com.jacksonbarreto.pixelArt;
 import java.util.Arrays;
 
 public class Color {
-    static final String REGEX_HEXADECIMAL_COLOR = "^((0x)?|#?)([a-fA-F0-9]{6})$|^(#?)([a-fA-F0-9]{3})$";
+    private static final String REGEX_HEXADECIMAL_COLOR = "^((0x)?|#?)([a-fA-F0-9]{6})$|^(#?)([a-fA-F0-9]{3})$";
+    private static final int RGB_SIZE = 3;
+    private static final int MAX_RGB_COLOR = 255;
+    private static final int MIN_RGB_COLOR = 0;
+    private static final int RED = 0;
+    private static final int GREEN = 1;
+    private static final int BLUE = 2;
+    private static final int HEXADECIMAL_FORMAT = 16;
+    private static final int COLOR_LENGTH_IN_HEXADECIMAL = 6;
+    private static final int LENGTH_OF_A_COLOR_COMPONENT_IN_HEXADECIMAL = 2;
+
     private String hexadecimalColor;
     private final short[] RGBColor;
 
@@ -17,16 +27,16 @@ public class Color {
     public Color(int red, int green, int blue) {
         if (RGBIsInvalid(red, green, blue))
             throw new IllegalArgumentException();
-        this.RGBColor = new short[3];
+        this.RGBColor = new short[RGB_SIZE];
         assignsValuesRGB(red, green, blue);
         this.hexadecimalColor = RGBColorToHexadecimalColor(this.RGBColor);
     }
 
     public Color(short[] RGBColor) {
-        if (RGBColor == null || RGBIsInvalid(RGBColor[0], RGBColor[1], RGBColor[2]))
+        if (RGBColor == null || RGBIsInvalid(RGBColor[RED], RGBColor[GREEN], RGBColor[BLUE]))
             throw new IllegalArgumentException();
-        this.RGBColor = new short[3];
-        assignsValuesRGB(RGBColor[0], RGBColor[1], RGBColor[2]);
+        this.RGBColor = new short[RGB_SIZE];
+        assignsValuesRGB(RGBColor[RED], RGBColor[GREEN], RGBColor[BLUE]);
         this.hexadecimalColor = RGBColorToHexadecimalColor(this.RGBColor);
     }
 
@@ -54,7 +64,7 @@ public class Color {
 
         this.hexadecimalColor = normalizeHexadecimalString(hexadecimalColor);
         short[] NewRGBColor = hexadecimalColorToRGBColor(this.hexadecimalColor);
-        assignsValuesRGB(NewRGBColor[0], NewRGBColor[1], NewRGBColor[2]);
+        assignsValuesRGB(NewRGBColor[RED], NewRGBColor[GREEN], NewRGBColor[BLUE]);
     }
 
     public short[] getRGBColor() {
@@ -64,7 +74,7 @@ public class Color {
     public void setRGBColor(short[] RGBColor) {
         if (RGBColor == null)
             throw new IllegalArgumentException();
-        this.setRGBColor(RGBColor[0], RGBColor[1], RGBColor[2]);
+        this.setRGBColor(RGBColor[RED], RGBColor[GREEN], RGBColor[BLUE]);
     }
 
     public void setRGBColor(int red, int green, int blue) {
@@ -77,7 +87,7 @@ public class Color {
 
     @Override
     public String toString() {
-        return "Color: HEX(" + hexadecimalColor + "), RGB(" + RGBColor[0] + ", " + RGBColor[1] + ", " + RGBColor[2] + ")";
+        return "Color: HEX(" + hexadecimalColor + "), RGB(" + RGBColor[RED] + ", " + RGBColor[GREEN] + ", " + RGBColor[BLUE] + ")";
     }
 
     @Override
@@ -96,13 +106,13 @@ public class Color {
     }
 
     private void assignsValuesRGB(int red, int green, int blue) {
-        this.RGBColor[0] = (short) red;
-        this.RGBColor[1] = (short) green;
-        this.RGBColor[2] = (short) blue;
+        this.RGBColor[RED] = (short) red;
+        this.RGBColor[GREEN] = (short) green;
+        this.RGBColor[BLUE] = (short) blue;
     }
 
     private boolean RGBIsInvalid(int red, int green, int blue) {
-        return ((red < 0 || red > 255) || (green < 0 || green > 255) || (blue < 0 || blue > 255));
+        return ((red < MIN_RGB_COLOR || red > MAX_RGB_COLOR) || (green < MIN_RGB_COLOR || green > MAX_RGB_COLOR) || (blue < MIN_RGB_COLOR || blue > MAX_RGB_COLOR));
     }
 
     private String normalizeHexadecimalString(String unNormalizedString) {
@@ -124,10 +134,12 @@ public class Color {
     }
 
     private short[] hexadecimalColorToRGBColor(String hexadecimalColor) {
-        short[] RGBColor = new short[3];
+        short[] RGBColor = new short[RGB_SIZE];
 
-        for (int i = 0, j = 6, k = 4; i < 3; i++, j -= 2, k -= 2) {
-            RGBColor[i] = Short.parseShort(hexadecimalColor.substring(hexadecimalColor.length() - j, hexadecimalColor.length() - k), 16);
+        for (int color = RED, i = COLOR_LENGTH_IN_HEXADECIMAL, j = COLOR_LENGTH_IN_HEXADECIMAL - LENGTH_OF_A_COLOR_COMPONENT_IN_HEXADECIMAL;
+             color < RGB_SIZE;
+             color++, i -= LENGTH_OF_A_COLOR_COMPONENT_IN_HEXADECIMAL, j -= LENGTH_OF_A_COLOR_COMPONENT_IN_HEXADECIMAL) {
+            RGBColor[color] = Short.parseShort(hexadecimalColor.substring(hexadecimalColor.length() - i, hexadecimalColor.length() - j), HEXADECIMAL_FORMAT);
         }
         return RGBColor;
     }
@@ -135,8 +147,8 @@ public class Color {
     private String RGBColorToHexadecimalColor(short[] RGBColor) {
         StringBuilder hexadecimalColor = new StringBuilder("#");
 
-        for (int i = 0; i < 3; i++) {
-            hexadecimalColor.append(Integer.toHexString(RGBColor[i]).toUpperCase());
+        for (int color = RED; color < RGB_SIZE; color++) {
+            hexadecimalColor.append(Integer.toHexString(RGBColor[color]).toUpperCase());
         }
 
         return hexadecimalColor.toString();
