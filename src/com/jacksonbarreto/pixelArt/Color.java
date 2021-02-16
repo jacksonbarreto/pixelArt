@@ -31,11 +31,15 @@ public class Color {
     }
 
     public Color(Color color) {
+        if (color == null)
+            throw new IllegalArgumentException();
         this.RGBColor = color.getRGBColor();
         this.hexadecimalColor = color.getHexadecimalColor();
     }
 
     public Color(CommonColors commonColors) {
+        if (commonColors == null)
+            throw new IllegalArgumentException();
         this.hexadecimalColor = commonColors.getHexadecimalColor();
         this.RGBColor = hexadecimalColorToRGBColor(commonColors.getHexadecimalColor());
     }
@@ -71,10 +75,12 @@ public class Color {
         this.hexadecimalColor = RGBColorToHexadecimalColor(this.RGBColor);
     }
 
+    @Override
     public String toString() {
         return "Color: HEX(" + hexadecimalColor + "), RGB(" + RGBColor[0] + ", " + RGBColor[1] + ", " + RGBColor[2] + ")";
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
@@ -84,6 +90,7 @@ public class Color {
         return (this.hexadecimalColor.equals(color.getHexadecimalColor()) && Arrays.equals(this.RGBColor, color.getRGBColor()));
     }
 
+    @Override
     public Color clone() {
         return new Color(this);
     }
