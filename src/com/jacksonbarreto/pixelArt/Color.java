@@ -8,9 +8,8 @@ public class Color {
     private final short[] RGBColor;
 
     public Color(String hexadecimalColor) {
-        if (hexadecimalColor == null || !hexadecimalColor.matches(REGEX_HEXADECIMAL_COLOR)) {
+        if (hexadecimalColor == null || !hexadecimalColor.matches(REGEX_HEXADECIMAL_COLOR))
             throw new IllegalArgumentException();
-        }
         this.hexadecimalColor = normalizeHexadecimalString(hexadecimalColor);
         this.RGBColor = hexadecimalColorToRGBColor(this.hexadecimalColor);
     }
@@ -73,7 +72,7 @@ public class Color {
     }
 
     public String toString() {
-        return "Color: " + hexadecimalColor + ", RGB(" + RGBColor[0] + ", " + RGBColor[1] + ", " + RGBColor[2] + ")";
+        return "Color: HEX(" + hexadecimalColor + "), RGB(" + RGBColor[0] + ", " + RGBColor[1] + ", " + RGBColor[2] + ")";
     }
 
     public boolean equals(Object obj) {
