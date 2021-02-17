@@ -4,12 +4,14 @@ public class Point2D {
     private double coordinateX;
     private double coordinateY;
 
-    Point2D(double coordinateX, double coordinateY) {
+    public Point2D(double coordinateX, double coordinateY) {
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
     }
 
-    Point2D(Point2D point2D) {
+    public Point2D(Point2D point2D) {
+        if (point2D == null)
+            throw new IllegalArgumentException();
         this.coordinateX = point2D.getCoordinateX();
         this.coordinateY = point2D.getCoordinateY();
     }
@@ -25,6 +27,11 @@ public class Point2D {
 
     public void offsetY(double incrementY) {
         this.offset(0.0, incrementY);
+    }
+
+    public void setCoordinate(double coordinateX, double coordinateY) {
+        this.coordinateX = coordinateX;
+        this.coordinateY = coordinateY;
     }
 
     public double getCoordinateX() {
@@ -43,6 +50,7 @@ public class Point2D {
         this.coordinateY = coordinateY;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
@@ -52,12 +60,15 @@ public class Point2D {
         return ((this.coordinateX == point2D.getCoordinateX()) && (this.coordinateY == point2D.getCoordinateY()));
     }
 
+    @Override
     public String toString() {
-        return "Point: " + getCoordinateX() +
+        return "Point: " +
+                getCoordinateX() +
                 ", " +
                 getCoordinateY();
     }
 
+    @Override
     public Point2D clone() {
         return new Point2D(this);
     }
